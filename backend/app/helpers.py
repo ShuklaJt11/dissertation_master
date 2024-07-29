@@ -65,7 +65,7 @@ def get_attacked_image(image_path: str) -> Tuple:
     noise = torch.randn(image.shape)
     image = noise * noise_ratio + image * (1 - noise_ratio)
 
-    imshow([original, image], 'Original vs Noisey')
+    # imshow([original, image], 'Original vs Noisey')
 
     image = image.unsqueeze(0)
     return (image, image_path)
