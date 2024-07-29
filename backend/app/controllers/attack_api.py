@@ -5,11 +5,13 @@ from app.helpers import get_random_image, get_attacked_image, get_model_predicti
 
 attack_api = Blueprint("attack", __name__)
 
-@attack_api.route('/', methods=['GET'])
+@attack_api.route('/', methods=['POST'])
 @cross_origin()
 def attack_image():
-    # data = request.get_json()
-    image_path = get_random_image()
+    data = request.get_json()
+    image_path = data.get('image')
+
+    print(image_path)
 
     original = get_unattacked_image(image_path)
     image = get_attacked_image(image_path)

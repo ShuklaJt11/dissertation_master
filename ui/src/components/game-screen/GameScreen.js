@@ -38,7 +38,7 @@ const GameScreen = () => {
                     <MainImage imageUrl={imageUrl} imageData={imageData} />
                 </Grid>
                 <Grid item xs={4}>
-                    <AttackArea setImageData={setImageData} setLoading={setLoading} />
+                    <AttackArea setImageData={setImageData} setLoading={setLoading} imageUrl={imageUrl} />
                 </Grid>
             </Grid>
         }

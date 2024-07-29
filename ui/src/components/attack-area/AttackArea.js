@@ -5,17 +5,25 @@ import AttackButton from '../attack-button/AttackButton';
 
 import { attackImageApi } from '../../services/utils';
 
-const AttackArea = ({setImageData, setLoading}) => {
+const AttackArea = ({setImageData, setLoading, imageUrl}) => {
 
     const randomNoiseAttack = () => {
         setLoading(true)
         fetch(attackImageApi, {
-            method: "GET"
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({'image': imageUrl})
         })
         .then(response => response.json())
         .then(data => {
             console.log(data)
             setImageData(data)
+            setLoading(false)
+        })
+        .catch(() => {
             setLoading(false)
         });
     }
