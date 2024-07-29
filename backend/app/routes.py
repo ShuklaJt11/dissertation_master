@@ -1,8 +1,8 @@
 from flask import Blueprint
-from app.controllers.test import test
+from app.controllers.attack_api import attack_api
+from app.controllers.image_path_api import image_path_api
 
-# main blueprint to be registered with application
 api = Blueprint('api', __name__)
 
-# register user with api blueprint
-api.register_blueprint(test, url_prefix="/test")
+api.register_blueprint(attack_api, url_prefix="/attack")
+api.register_blueprint(image_path_api, url_prefix="/get-image-path")

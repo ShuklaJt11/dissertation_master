@@ -25,3 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 file-server
+
+playground
+
+devenv
