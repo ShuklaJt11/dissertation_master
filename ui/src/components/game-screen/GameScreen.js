@@ -38,7 +38,6 @@ const GameScreen = () => {
                     <AttackArea />
                 </Grid>
             </Grid>
-
         }
         </Box>
     );
