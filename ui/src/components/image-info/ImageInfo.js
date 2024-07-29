@@ -1,27 +1,25 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import ImageInfoTable from '../../image-info-table/ImageInfoTable';
 
 const ImageInfo = ({imageData}) => {
   return (
-    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        {imageData.attackedTable ?
-        <>
-            <Grid item xs={6}>
-                Original Image:
+    <>
+    {imageData.attackedTable ?
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={6} sx={{padding: '10px'}}>
+                <Typography variant='body1' color="white">Original Image:</Typography>
                 <ImageInfoTable tableData={imageData.originalTable} />
             </Grid>
-            <Grid item xs={6}>
-                Attacked Image:
+            <Grid item xs={6} sx={{padding: '10px'}}>
+                <Typography variant='body1' color="white">Attacked Image:</Typography>
                 <ImageInfoTable tableData={imageData.attackedTable} />
             </Grid>
-        </> : 
-        <Grid item xs={6}>
-            <ImageInfoTable tableData={imageData.originalTable} />
-        </Grid>
-        }
-    </Grid>
+        </Grid> :
+        <ImageInfoTable tableData={imageData.originalTable} />   
+    }
+    </>
   );
 };
 

@@ -18,7 +18,9 @@ def attack_image():
     image_output = get_model_prediction(image)
 
     return Response(
-        response=json.dumps([original_output, image_output]),
+        response=json.dumps({
+            "originalTable": original_output, 
+            "attackedTable": image_output}),
         status=200,
         mimetype='application/json'
     )

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-const ImageInfoTable = ({tableData}) => {
+const ImageInfoTable = ({tableData=[]}) => {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{maxWidth: 500}}>
         <Table aria-label="simple table" size='small'>
             <TableHead>
                 <TableRow>
