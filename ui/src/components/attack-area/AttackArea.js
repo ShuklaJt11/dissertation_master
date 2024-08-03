@@ -3,27 +3,44 @@ import { Box } from '@mui/material';
 
 import AttackButton from '../attack-button/AttackButton';
 
-import { attackImageApi } from '../../services/utils';
+import { attackImageApi, fetchAttackedImageApi } from '../../services/utils';
 
-const AttackArea = ({setImageData, setLoading, imageUrl}) => {
+const AttackArea = ({setImageData, setLoading, imageUrl, setAttackedImageUrl}) => {
 
     const randomNoiseAttack = () => {
         setLoading(true)
-        fetch(attackImageApi, {
+        fetch(fetchAttackedImageApi, {
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'image/jpeg',
                 'Content-Type': 'application/json'
             },
             method: "POST",
             body: JSON.stringify({'image': imageUrl})
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            setImageData(data)
-            setLoading(false)
+        .then(response => response.blob())
+        .then(imageBlob => {
+            const attackedImageUrl = URL.createObjectURL(imageBlob);
+            setAttackedImageUrl(attackedImageUrl);
+            fetch(attackImageApi, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify({'image': imageUrl})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                setImageData(data)
+                setLoading(false)
+            })
+            .catch(() => {
+                setLoading(false)
+            });
         })
-        .catch(() => {
+        .catch(error => {
+            console.error('Error loading image', error)
             setLoading(false)
         });
     }

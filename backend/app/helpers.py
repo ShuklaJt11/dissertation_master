@@ -8,12 +8,16 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from torchvision import transforms
 from typing import List, Tuple
-from torch import Tensor
+# from torch import Tensor
 
 FILE_SERVER_ROOT = '../file-server/'
 PASSED_IMAGES_PKL = 'pickles/correct_images.pkl'
 CLASS_NAMES_PKL = 'pickles/classnames.pkl'
 MODEL_PKL = 'pickles/resnet50_pickle.pkl'
+NOISE_RATIO = 0.05
+SEED_VALUE = 66
+transform_to_tensor = transforms.ToTensor()
+transform_to_image_object = transforms.ToPILImage()
 
 def imshow(inp: List, title: str=None):
     plt.figure(figsize=(10, 10))
@@ -27,13 +31,29 @@ def imshow(inp: List, title: str=None):
         plt.title(title)
     plt.show()
 
-def get_random_image() -> str:    
+def get_random_image() -> str:
+    transform_to_tensor = transforms.ToTensor()    
     with open(PASSED_IMAGES_PKL, 'rb') as f:
         correct_images = pickle.load(f)
 
     random_image = random.choice(correct_images)
     image_path_split = random_image.split('/')
-    return '/'.join(image_path_split[-3:])
+    image_path = '/'.join(image_path_split[-3:])
+
+    image_obj = Image.open(FILE_SERVER_ROOT + image_path)
+
+    image_tensor = transform_to_tensor(image_obj)
+
+    while (image_tensor.size(0) != 3):
+        random_image = random.choice(correct_images)
+        image_path_split = random_image.split('/')
+        image_path = '/'.join(image_path_split[-3:])
+
+        image_obj = Image.open(FILE_SERVER_ROOT + image_path)
+
+        image_tensor = transform_to_tensor(image_obj)
+
+    return image_path
 
 def get_unattacked_image(image_path: str) -> Tuple:
     transform = transforms.Compose([
@@ -57,18 +77,26 @@ def get_attacked_image(image_path: str) -> Tuple:
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    noise_ratio = 0.4
-
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
     image = transform(image_obj)
-    original = image
+    # original = image
+    torch.manual_seed(SEED_VALUE)
     noise = torch.randn(image.shape)
-    image = noise * noise_ratio + image * (1 - noise_ratio)
+    image = noise * NOISE_RATIO + image * (1 - NOISE_RATIO)
 
     # imshow([original, image], 'Original vs Noisey')
 
     image = image.unsqueeze(0)
     return (image, image_path)
+
+def get_attacked_image_object(image_path: str) -> Image:
+    image_obj = Image.open(FILE_SERVER_ROOT + image_path)
+    image = transform_to_tensor(image_obj)
+    torch.manual_seed(SEED_VALUE)
+    noise = torch.randn(image.shape)
+    image = noise * NOISE_RATIO + image * (1 - NOISE_RATIO)
+
+    return transform_to_image_object(image)
 
 def get_model_prediction(image_data: Tuple) -> List:
     with open(CLASS_NAMES_PKL, 'rb') as f:
