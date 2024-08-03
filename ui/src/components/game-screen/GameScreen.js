@@ -13,8 +13,8 @@ const GameScreen = () => {
     const [imageUrl, setImageUrl] = useState('')
     const [attackedImageUrl, setAttackedImageUrl] = useState('')
     const [imageData, setImageData] = useState('')
-
-    useEffect(() => {
+    
+    const loadNewImage = () => {
         fetch(fetchImageApi, {
             method: "GET"
         })
@@ -27,7 +27,17 @@ const GameScreen = () => {
             })
             setLoading(false)
         });
-    }, []);
+    };
+    
+    const reset = () => {
+        setLoading(true);
+        setImageUrl('');
+        setAttackedImageUrl('');
+        setImageData('');
+        loadNewImage();
+    }
+    
+    useEffect(loadNewImage, []);
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -36,7 +46,7 @@ const GameScreen = () => {
             <LoadingAnimation /> :
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={7} sx={{margin: "15px"}}>
-                    <MainImage imageUrl={imageUrl} imageData={imageData} attackedImageUrl={attackedImageUrl} />
+                    <MainImage imageUrl={imageUrl} imageData={imageData} attackedImageUrl={attackedImageUrl} reset={reset} />
                 </Grid>
                 <Grid item xs={4}>
                     <AttackArea setImageData={setImageData} setLoading={setLoading} imageUrl={imageUrl} setAttackedImageUrl={setAttackedImageUrl} />

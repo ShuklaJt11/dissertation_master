@@ -3,8 +3,9 @@ import { Box, Grid } from '@mui/material';
 
 import { imageLocation } from '../../services/utils';
 import ImageInfo from '../image-info/ImageInfo';
+import ResetButton from '../reset-button/ResetButton';
 
-const MainImage = ({imageUrl, imageData, attackedImageUrl}) => {
+const MainImage = ({imageUrl, imageData, attackedImageUrl, reset}) => {
   return (
     <Box display="flex" justifyContent="center" alignItems="center" height="calc(100vh - 48px)" flexDirection="column">
       {imageData.attackedTable ?
@@ -31,6 +32,7 @@ const MainImage = ({imageUrl, imageData, attackedImageUrl}) => {
         </div>
       }
       <ImageInfo imageData={imageData} />
+      <ResetButton action={reset} />
     </Box>
   );
 };
