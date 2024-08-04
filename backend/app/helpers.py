@@ -14,10 +14,15 @@ FILE_SERVER_ROOT = '../file-server/'
 PASSED_IMAGES_PKL = 'pickles/correct_images.pkl'
 CLASS_NAMES_PKL = 'pickles/classnames.pkl'
 MODEL_PKL = 'pickles/resnet50_pickle.pkl'
-NOISE_RATIO = 0.05
+NOISE_RATIO = 0.1
 SEED_VALUE = 66
 transform_to_tensor = transforms.ToTensor()
 transform_to_image_object = transforms.ToPILImage()
+transform_for_model = transforms.Compose([
+    transforms.Resize(256, antialias=True),
+    transforms.CenterCrop(224),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
 
 def imshow(inp: List, title: str=None):
     plt.figure(figsize=(10, 10))
@@ -56,33 +61,22 @@ def get_random_image() -> str:
     return image_path
 
 def get_unattacked_image(image_path: str) -> Tuple:
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Resize(256, antialias=True),
-        transforms.CenterCrop(224),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
-    image = transform(image_obj)
+    image = transform_to_tensor(image_obj)
+    image = transform_for_model(image)
     image = image.unsqueeze(0)
     
     return (image, image_path)
 
 def get_attacked_image(image_path: str) -> Tuple:
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Resize(256, antialias=True),
-        transforms.CenterCrop(224),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
-    image = transform(image_obj)
-    # original = image
+
+    image = transform_to_tensor(image_obj)
     torch.manual_seed(SEED_VALUE)
     noise = torch.randn(image.shape)
     image = noise * NOISE_RATIO + image * (1 - NOISE_RATIO)
+    image = transform_for_model(image)
+    # original = image
 
     # imshow([original, image], 'Original vs Noisey')
 

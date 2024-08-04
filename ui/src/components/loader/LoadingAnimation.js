@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 const LoadingAnimation = () => {
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+    <Box display="flex" justifyContent="center" alignItems="center" height="calc(100vh - 48px)">
         <CircularProgress />
     </Box>
   );

@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
 
 const AttackButton = ({attackHeading, attackDescription, action=() => {return}}) => {
     return (
-        <Card>
+        <Card sx={{margin:"15px"}}>
             <CardActionArea onClick={action}>
                 <CardContent>
                     <Typography variant="body1" component="div">
