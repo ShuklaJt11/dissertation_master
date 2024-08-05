@@ -11,11 +11,12 @@ attack_api = Blueprint("attack", __name__)
 def attack_image():
     data = request.get_json()
     image_path = data.get('image')
-
+    attacks = data.get('attacks')
     print(image_path)
+    print(attacks)
 
     original = get_unattacked_image(image_path)
-    image = get_attacked_image(image_path)
+    image = get_attacked_image(image_path, attacks)
 
     original_output = get_model_prediction(original)
     image_output = get_model_prediction(image)
@@ -34,8 +35,9 @@ def attack_image():
 def attacked_image_object():
     data = request.get_json()
     image_path = data.get('image')
+    attacks = data.get('attacks')
 
-    image = get_attacked_image_object(image_path)
+    image = get_attacked_image_object(image_path, attacks)
 
     image_io = BytesIO()
     image.save(image_io, format='JPEG')

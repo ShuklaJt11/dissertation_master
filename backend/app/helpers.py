@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 from PIL import Image
 from torchvision import transforms
-from typing import List, Tuple
-# from torch import Tensor
+from typing import List, Tuple, Dict
+from torch import Tensor
 
 FILE_SERVER_ROOT = '../file-server/'
 PASSED_IMAGES_PKL = 'pickles/correct_images.pkl'
@@ -24,6 +24,17 @@ transform_for_model = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
+def add_random_noise(image_tensor: Tensor, count: int) -> Tensor:
+    torch.manual_seed(SEED_VALUE)
+    actual_noise_ratio = count * NOISE_RATIO
+    noise = torch.randn(image_tensor.shape)
+    image = noise * actual_noise_ratio + image_tensor * (1 - actual_noise_ratio)
+    return image
+
+attack_actions = {
+    "random_noise": add_random_noise
+}
+    
 def imshow(inp: List, title: str=None):
     plt.figure(figsize=(10, 10))
     tmp = np.hstack([img.numpy() for img in inp]).transpose(1, 2, 0)
@@ -68,13 +79,12 @@ def get_unattacked_image(image_path: str) -> Tuple:
     
     return (image, image_path)
 
-def get_attacked_image(image_path: str) -> Tuple:
+def get_attacked_image(image_path: str, attacks: List) -> Tuple:
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
 
     image = transform_to_tensor(image_obj)
-    torch.manual_seed(SEED_VALUE)
-    noise = torch.randn(image.shape)
-    image = noise * NOISE_RATIO + image * (1 - NOISE_RATIO)
+    for attack in attacks:
+        image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
     image = transform_for_model(image)
     # original = image
 
@@ -83,12 +93,11 @@ def get_attacked_image(image_path: str) -> Tuple:
     image = image.unsqueeze(0)
     return (image, image_path)
 
-def get_attacked_image_object(image_path: str) -> Image:
+def get_attacked_image_object(image_path: str, attacks: List) -> Image:
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
     image = transform_to_tensor(image_obj)
-    torch.manual_seed(SEED_VALUE)
-    noise = torch.randn(image.shape)
-    image = noise * NOISE_RATIO + image * (1 - NOISE_RATIO)
+    for attack in attacks:
+        image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
 
     return transform_to_image_object(image)
 

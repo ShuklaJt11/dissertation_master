@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, List, ListItem, ListItemText, IconButton, Typography } from '@mui/material';
+import { Box, List, ListItem, ListItemText, IconButton, Typography, ListSubheader } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -110,7 +110,7 @@ const AttackArea = ({setImageData, setLoading, imageUrl, setAttackedImageUrl}) =
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="calc(100vh - 48px)" flexDirection="column">
             <ListArea>
-                <List dense={false}>
+                <List dense={false} subheader={<ListSubheader><Typography variant='body1' textAlign={"center"} sx={{marginTop: "15px"}}>Attacks: {attackCount} / 5</Typography></ListSubheader>}>
                 {
                     attackList.map(attack => {
                         return (

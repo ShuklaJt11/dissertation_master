@@ -42,7 +42,7 @@ const GameScreen = () => {
     return (
         <Box sx={{ width: '100%' }}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={7} sx={{marginLeft: '15px'}}>
+                <Grid item xs={7} sx={{marginLeft: '80px'}}>
                 {loading ?
                     <LoadingAnimation /> :
                     <MainImage imageUrl={imageUrl} imageData={imageData} attackedImageUrl={attackedImageUrl} reset={reset} />
