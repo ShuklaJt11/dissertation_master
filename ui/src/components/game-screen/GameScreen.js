@@ -1,43 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import { Box, Grid } from '@mui/material';
 
 import MainImage from '../main-image/MainImage';
 import LoadingAnimation from '../loader/LoadingAnimation';
 import AttackArea from '../attack-area/AttackArea';
+import IntroModal from '../intro-modal/IntroModal';
 
-import { fetchImageApi } from '../../services/utils';
+import { fetchImageApi, fetchImageByLevelApi } from '../../services/utils';
 
 const GameScreen = () => {
-    const [loading, setLoading] = useState(true)
-    const [imageUrl, setImageUrl] = useState('')
-    const [attackedImageUrl, setAttackedImageUrl] = useState('')
-    const [imageData, setImageData] = useState('')
+    const [loading, setLoading] = useState(true);
+    const [imageUrl, setImageUrl] = useState('');
+    const [attackedImageUrl, setAttackedImageUrl] = useState('');
+    const [imageData, setImageData] = useState('');
+    const [openModal, setOpenModal] = useState(true);
+
+    const handleOpen = () => setOpenModal(true);
     
+    const handleClose = () => setOpenModal(false);
+
     const loadNewImage = () => {
         fetch(fetchImageApi, {
             method: "GET"
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            setImageUrl(data.image_url)
+            console.log(data);
+            setImageUrl(data.image_url);
             setImageData({
                 originalTable: data.originalTable
-            })
-            setLoading(false)
+            });
+            handleClose();
+            setLoading(false);
         });
     };
+
+    const loadNewImageByLevel = level => {
+        fetch(fetchImageByLevelApi, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({
+                "level": level
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setImageUrl(data.image_url);
+            setImageData({
+                originalTable: data.originalTable
+            });
+            handleClose();
+            setLoading(false);
+        });
+    };
+
+    const selectLevel = level => level > 3 ? loadNewImage() : loadNewImageByLevel(level);
     
     const reset = () => {
         setLoading(true);
         setImageUrl('');
         setAttackedImageUrl('');
         setImageData('');
-        loadNewImage();
+        handleOpen();
     };
-    
-    useEffect(loadNewImage, []);
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -52,6 +81,7 @@ const GameScreen = () => {
                     <AttackArea setImageData={setImageData} setLoading={setLoading} imageUrl={imageUrl} setAttackedImageUrl={setAttackedImageUrl} />
                 </Grid>
             </Grid>
+            <IntroModal open={openModal} selectLevel={selectLevel} />
         </Box>
     );
 };

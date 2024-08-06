@@ -32,8 +32,32 @@ def add_random_noise(image_tensor: Tensor, count: int) -> Tensor:
     image = noise * actual_noise_ratio + image_tensor * (1 - actual_noise_ratio)
     return image
 
+def add_rotation_clock(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
+def add_rotation_anti(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
+def add_shift_left(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
+def add_shift_right(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
+def add_mirror_vertical(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
+def add_mirror_horizontal(image_tensor: Tensor, count: int) -> Tensor:
+    pass
+
 attack_actions = {
-    "random_noise": add_random_noise
+    "random_noise": add_random_noise,
+    "rotation_clock": add_rotation_clock,
+    "rotation_anti": add_rotation_anti,
+    "shifting_left": add_shift_left,
+    "shifting_right": add_shift_right,
+    "mirroring_vertical": add_mirror_vertical,
+    "mirroring_horizontal": add_mirror_horizontal,
 }
     
 def imshow(inp: List, title: str=None):
@@ -107,7 +131,8 @@ def get_attacked_image(image_path: str, attacks: List) -> Tuple:
 
     image = transform_to_tensor(image_obj)
     for attack in attacks:
-        image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
+        if attack["count"] > 0:
+            image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
     image = transform_for_model(image)
     # original = image
 
@@ -120,7 +145,8 @@ def get_attacked_image_object(image_path: str, attacks: List) -> Image:
     image_obj = Image.open(FILE_SERVER_ROOT + image_path)
     image = transform_to_tensor(image_obj)
     for attack in attacks:
-        image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
+        if attack["count"] > 0:
+            image = attack_actions[attack["id"]](image_tensor=image, count=attack["count"])
 
     return transform_to_image_object(image)
 
