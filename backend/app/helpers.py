@@ -12,6 +12,7 @@ from torch import Tensor
 
 FILE_SERVER_ROOT = '../file-server/'
 PASSED_IMAGES_PKL = 'pickles/correct_images.pkl'
+IMAGES_BY_LEVEL_PKL = 'pickles/correct_images_with_level.pkl'
 CLASS_NAMES_PKL = 'pickles/classnames.pkl'
 MODEL_PKL = 'pickles/resnet50_pickle.pkl'
 NOISE_RATIO = 0.1
@@ -48,7 +49,6 @@ def imshow(inp: List, title: str=None):
     plt.show()
 
 def get_random_image() -> str:
-    transform_to_tensor = transforms.ToTensor()    
     with open(PASSED_IMAGES_PKL, 'rb') as f:
         correct_images = pickle.load(f)
 
@@ -62,6 +62,29 @@ def get_random_image() -> str:
 
     while (image_tensor.size(0) != 3):
         random_image = random.choice(correct_images)
+        image_path_split = random_image.split('/')
+        image_path = '/'.join(image_path_split[-3:])
+
+        image_obj = Image.open(FILE_SERVER_ROOT + image_path)
+
+        image_tensor = transform_to_tensor(image_obj)
+
+    return image_path
+
+def get_random_image_by_level(level: int) -> str:    
+    with open(IMAGES_BY_LEVEL_PKL, 'rb') as f:
+        correct_images_by_level = pickle.load(f)
+
+    random_image = random.choice(correct_images_by_level[level])
+    image_path_split = random_image.split('/')
+    image_path = '/'.join(image_path_split[-3:])
+
+    image_obj = Image.open(FILE_SERVER_ROOT + image_path)
+
+    image_tensor = transform_to_tensor(image_obj)
+
+    while (image_tensor.size(0) != 3):
+        random_image = random.choice(correct_images_by_level[level])
         image_path_split = random_image.split('/')
         image_path = '/'.join(image_path_split[-3:])
 
