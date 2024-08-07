@@ -5,9 +5,9 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 
-from PIL import Image
+from PIL import Image, ImageChops
 from torchvision import transforms
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 from torch import Tensor
 
 FILE_SERVER_ROOT = '../file-server/'
@@ -17,6 +17,8 @@ CLASS_NAMES_PKL = 'pickles/classnames.pkl'
 MODEL_PKL = 'pickles/resnet50_pickle.pkl'
 NOISE_RATIO = 0.1
 SEED_VALUE = 66
+ROTATE_ANGLE = 45
+SHIFT_DELTA = 30
 transform_to_tensor = transforms.ToTensor()
 transform_to_image_object = transforms.ToPILImage()
 transform_for_model = transforms.Compose([
@@ -33,22 +35,36 @@ def add_random_noise(image_tensor: Tensor, count: int) -> Tensor:
     return image
 
 def add_rotation_clock(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    rotated_image_clockwise = image.rotate(-count * ROTATE_ANGLE, expand=True)
+    return transform_to_tensor(rotated_image_clockwise)
 
 def add_rotation_anti(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    rotated_image_anticlockwise = image.rotate(count * ROTATE_ANGLE, expand=True)
+    return transform_to_tensor(rotated_image_anticlockwise)
 
 def add_shift_left(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    shifted_left = ImageChops.offset(image, -count * SHIFT_DELTA, 0)
+    return transform_to_tensor(shifted_left)
 
 def add_shift_right(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    shifted_right = ImageChops.offset(image, count * SHIFT_DELTA, 0)
+    return transform_to_tensor(shifted_right)
 
 def add_mirror_vertical(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    for _ in range(count):
+        mirrored_horizontal = image.transpose(Image.FLIP_LEFT_RIGHT)
+    return transform_to_tensor(mirrored_horizontal)
 
 def add_mirror_horizontal(image_tensor: Tensor, count: int) -> Tensor:
-    pass
+    image = transform_to_image_object(image_tensor)
+    for _ in range(count):
+        mirrored_horizontal = image.transpose(Image.FLIP_TOP_BOTTOM)
+    return transform_to_tensor(mirrored_horizontal)
 
 attack_actions = {
     "random_noise": add_random_noise,
