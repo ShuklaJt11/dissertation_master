@@ -7,6 +7,8 @@ export const fetchAttackedImageApi = `${backendHost}/attack/get-image`;
 
 export const imageLocation = '/file-server/';
 
+export const maxAttacks = 10;
+
 export const difficultyList = ['Easy', 'Medium', 'Hard', 'Random'];
 
 export const attackList = [

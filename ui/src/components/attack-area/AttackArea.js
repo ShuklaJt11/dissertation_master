@@ -8,7 +8,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AttackButton from '../attack-button/AttackButton';
 import GeneralButton from '../general-button/GeneralButton';
 
-import { attackImageApi, fetchAttackedImageApi, attackList } from '../../services/utils';
+import { attackImageApi, fetchAttackedImageApi, attackList, maxAttacks } from '../../services/utils';
 
 const ListArea = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -116,7 +116,7 @@ const AttackArea = ({
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="calc(100vh - 48px)" flexDirection="column">
             <ListArea>
-                <List dense={false} subheader={<ListSubheader><Typography variant='body1' textAlign={"center"} sx={{marginTop: "15px"}}>Attacks: {attackCount} / 5</Typography></ListSubheader>}>
+                <List dense={false} subheader={<ListSubheader><Typography variant='body1' textAlign={"center"} sx={{marginTop: "15px"}}>Attacks: {attackCount} / {maxAttacks}</Typography></ListSubheader>}>
                 {
                     attackList.map(attack => {
                         return (

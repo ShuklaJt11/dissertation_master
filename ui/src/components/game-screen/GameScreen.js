@@ -6,7 +6,7 @@ import LoadingAnimation from '../loader/LoadingAnimation';
 import AttackArea from '../attack-area/AttackArea';
 import IntroModal from '../intro-modal/IntroModal';
 
-import { fetchImageApi, fetchImageByLevelApi, attackList } from '../../services/utils';
+import { fetchImageApi, fetchImageByLevelApi, attackList, maxAttacks } from '../../services/utils';
 
 const GameScreen = () => {
     const [loading, setLoading] = useState(true);
@@ -75,6 +75,7 @@ const GameScreen = () => {
         setImageUrl('');
         setAttackedImageUrl('');
         setImageData('');
+        setAttackCount(0);
         setSelectedAttacks(() => {
             return attackList.map(attack => {
                 return {
@@ -87,7 +88,7 @@ const GameScreen = () => {
     };
 
     const toggleAttackStatus = () => {
-        if (attackCount < 5) setDisableAdd(false);
+        if (attackCount < maxAttacks) setDisableAdd(false);
         else setDisableAdd(true);
     }
 
