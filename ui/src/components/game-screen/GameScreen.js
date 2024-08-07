@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 
 import MainImage from '../main-image/MainImage';
@@ -6,7 +6,7 @@ import LoadingAnimation from '../loader/LoadingAnimation';
 import AttackArea from '../attack-area/AttackArea';
 import IntroModal from '../intro-modal/IntroModal';
 
-import { fetchImageApi, fetchImageByLevelApi } from '../../services/utils';
+import { fetchImageApi, fetchImageByLevelApi, attackList } from '../../services/utils';
 
 const GameScreen = () => {
     const [loading, setLoading] = useState(true);
@@ -14,6 +14,16 @@ const GameScreen = () => {
     const [attackedImageUrl, setAttackedImageUrl] = useState('');
     const [imageData, setImageData] = useState('');
     const [openModal, setOpenModal] = useState(true);
+    const [selectedAttacks, setSelectedAttacks] = useState(() => {
+        return attackList.map(attack => {
+            return {
+                id: attack.id,
+                count: 0
+            }
+        })
+    });
+    const [attackCount, setAttackCount] = useState(0);
+    const [disableAdd, setDisableAdd] = useState(false);
 
     const handleOpen = () => setOpenModal(true);
     
@@ -65,8 +75,23 @@ const GameScreen = () => {
         setImageUrl('');
         setAttackedImageUrl('');
         setImageData('');
+        setSelectedAttacks(() => {
+            return attackList.map(attack => {
+                return {
+                    id: attack.id,
+                    count: 0
+                }
+            })
+        });
         handleOpen();
     };
+
+    const toggleAttackStatus = () => {
+        if (attackCount < 5) setDisableAdd(false);
+        else setDisableAdd(true);
+    }
+
+    useEffect(toggleAttackStatus, [attackCount])
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -78,7 +103,16 @@ const GameScreen = () => {
                 }
                 </Grid>
                 <Grid item xs={4}>
-                    <AttackArea setImageData={setImageData} setLoading={setLoading} imageUrl={imageUrl} setAttackedImageUrl={setAttackedImageUrl} />
+                    <AttackArea 
+                        setImageData={setImageData} 
+                        setLoading={setLoading} 
+                        imageUrl={imageUrl} 
+                        setAttackedImageUrl={setAttackedImageUrl} 
+                        selectedAttacks={selectedAttacks}
+                        setSelectedAttacks={setSelectedAttacks}
+                        attackCount={attackCount}
+                        setAttackCount={setAttackCount}
+                        disableAdd={disableAdd} />
                 </Grid>
             </Grid>
             <IntroModal open={openModal} selectLevel={selectLevel} />
