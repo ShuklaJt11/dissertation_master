@@ -54,7 +54,7 @@ const IntroModal = ({open, selectLevel}) => {
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Select Difficulty:
                     </Typography>
-                    {difficultyList.map((level, idx) => <GeneralButton label={level} action={() => selectLevel(idx)} />)}
+                    {difficultyList.map((level, idx) => <GeneralButton key={idx} label={level} action={() => selectLevel(idx)} />)}
                 </Box>
             </ModalArea>
         </Modal>
