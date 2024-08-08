@@ -25,8 +25,9 @@ const AttackArea = ({
     setSelectedAttacks,
     attackCount,
     setAttackCount,
-    disableAdd }) => {
-
+    disableAdd,
+    openAlert 
+}) => {
     const attckAI = () => {
         setLoading(true)
         const requestPayload = {
@@ -56,6 +57,8 @@ const AttackArea = ({
             .then(response => response.json())
             .then(data => {
                 console.log(data)
+                if (data.attackedTable[0].name !== data.originalTable[0].name ) openAlert("success", "Congratulations! You've beaten the AI.");
+                else openAlert("info", "The image is still correctly recognized by the AI.");
                 setImageData(data)
                 setLoading(false)
             })
