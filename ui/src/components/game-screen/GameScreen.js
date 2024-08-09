@@ -9,7 +9,7 @@ import GameAlert from '../game-alert/GameAlert';
 
 import { fetchImageApi, fetchImageByLevelApi, attackList, maxAttacks } from '../../services/utils';
 
-const GameScreen = () => {
+const GameScreen = ({gameTheme, toggleTheme}) => {
     const [loading, setLoading] = useState(true);
     const [imageUrl, setImageUrl] = useState('');
     const [attackedImageUrl, setAttackedImageUrl] = useState('');
@@ -133,7 +133,7 @@ const GameScreen = () => {
                         openAlert={openAlert} />
                 </Grid>
             </Grid>
-            <IntroModal open={openModal} selectLevel={selectLevel} />
+            <IntroModal open={openModal} selectLevel={selectLevel} gameTheme={gameTheme} toggleTheme={toggleTheme} />
             <GameAlert open={showAlert} message={alertMessage} severity={alertType} handleClose={closeAlert} />
         </Box>
     );

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Modal, Typography } from '@mui/material'
+import { Box, Modal, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import GeneralButton from '../general-button/GeneralButton';
+import ThemeSelector from '../theme-selector/ThemeSelector';
 
 import { difficultyList } from '../../services/utils';
 
@@ -23,7 +24,7 @@ const ModalArea = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const IntroModal = ({open, selectLevel}) => {
+const IntroModal = ({open, selectLevel, gameTheme, toggleTheme}) => {
     return (
         <Modal
             open={open}
@@ -42,6 +43,7 @@ const IntroModal = ({open, selectLevel}) => {
                     }} >
                         BEAT THE AI
                     </Typography>
+                    <ThemeSelector gameTheme={gameTheme} toggleTheme={toggleTheme} />
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         The name of the game: Beat the AI.
                     </Typography>
