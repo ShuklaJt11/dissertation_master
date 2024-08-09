@@ -54,4 +54,16 @@ export const attackList = [
         "description": "Mirror / Flip the image horizontally.",
         "max_count": 1
     },
+    {
+        "id": "shearing_vertical",
+        "name": "Shear Vertical Attack",
+        "description": "Shear the image vertically by 0.2 shearing factor.",
+        "max_count": 1
+    },
+    {
+        "id": "shearing_horizontal",
+        "name": "Shear Horizontal Attack",
+        "description": "Shear the image horizontally by 0.2 shearing factor.",
+        "max_count": 1
+    },
 ];

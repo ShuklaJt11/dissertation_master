@@ -119,7 +119,7 @@ const AttackArea = ({
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="calc(100vh - 48px)" flexDirection="column">
             <ListArea>
-                <List dense={false} subheader={<ListSubheader><Typography variant='body1' textAlign={"center"} sx={{marginTop: "15px"}}>Attacks: {attackCount} / {maxAttacks}</Typography></ListSubheader>}>
+                <List dense={true} subheader={<ListSubheader><Typography variant='body1' textAlign={"center"} sx={{marginTop: "15px"}}>Attacks: {attackCount} / {maxAttacks}</Typography></ListSubheader>}>
                 {
                     attackList.map(attack => {
                         let currentAttack = {
@@ -155,7 +155,6 @@ const AttackArea = ({
                                             </IconButton>) 
                                         }
                                     </Box>
-                                    
                                 }
                             >
                                 <ListItemText
