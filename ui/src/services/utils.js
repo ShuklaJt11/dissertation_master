@@ -66,4 +66,10 @@ export const attackList = [
         "description": "Shear the image horizontally by 0.2 shearing factor.",
         "max_count": 1
     },
+    {
+        "id": "blur_image",
+        "name": "Blur Attack",
+        "description": "Blur the image.",
+        "max_count": 2
+    }
 ];

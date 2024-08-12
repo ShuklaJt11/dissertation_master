@@ -159,7 +159,7 @@ const AttackArea = ({
                             >
                                 <ListItemText
                                     primary={currentAttack.name}
-                                    secondary={currentAttack.description}
+                                    secondary={`${currentAttack.description} (Max attack count: ${currentAttack.max_count})`}
                                 />
                             </ListItem>
                         )

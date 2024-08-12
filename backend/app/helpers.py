@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageFilter
 from torchvision import transforms
 from typing import List, Tuple
 from torch import Tensor
@@ -83,6 +83,12 @@ def add_shear_horizontal(image_tensor: Tensor, count: int) -> Tensor:
         sheared_horizontal = image.transform((new_width, image.height), Image.AFFINE, (1, SHEAR_FACTOR, -xshift if SHEAR_FACTOR > 0 else 0, 0, 1, 0), Image.BICUBIC)
     return transform_to_tensor(sheared_horizontal)
 
+def add_blur(image_tensor: Tensor, count: int) -> Tensor:
+    image = transform_to_image_object(image_tensor)
+    for _ in range(count):
+        blurred_image = image.filter(ImageFilter.BLUR)
+    return transform_to_tensor(blurred_image)
+
 attack_actions = {
     "random_noise": add_random_noise,
     "rotation_clock": add_rotation_clock,
@@ -93,6 +99,7 @@ attack_actions = {
     "mirroring_horizontal": add_mirror_horizontal,
     "shearing_vertical": add_shear_vertical,
     "shearing_horizontal": add_shear_horizontal,
+    "blur_image": add_blur,
 }
     
 def imshow(inp: List, title: str=None):
