@@ -72,7 +72,7 @@ const GameScreen = ({gameTheme, toggleTheme}) => {
         });
     };
 
-    const selectLevel = level => level > 3 ? loadNewImage() : loadNewImageByLevel(level);
+    const selectLevel = level => level > 2 ? loadNewImage() : loadNewImageByLevel(level);
     
     const reset = () => {
         setLoading(true);
