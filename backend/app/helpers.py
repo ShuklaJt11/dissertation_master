@@ -58,36 +58,36 @@ def add_shift_right(image_tensor: Tensor, count: int) -> Tensor:
 def add_mirror_vertical(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
     for _ in range(count):
-        mirrored_horizontal = image.transpose(Image.FLIP_LEFT_RIGHT)
-    return transform_to_tensor(mirrored_horizontal)
+        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+    return transform_to_tensor(image)
 
 def add_mirror_horizontal(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
     for _ in range(count):
-        mirrored_horizontal = image.transpose(Image.FLIP_TOP_BOTTOM)
-    return transform_to_tensor(mirrored_horizontal)
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    return transform_to_tensor(image)
 
 def add_shear_vertical(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
-    for _ in range(count):
-        yshift = abs(SHEAR_FACTOR) * image.width
-        new_height = image.height + int(round(yshift))
-        sheared_vertical = image.transform((image.width, new_height), Image.AFFINE, (1, 0, 0, SHEAR_FACTOR, 1, -yshift if SHEAR_FACTOR > 0 else 0), Image.BICUBIC)
+
+    yshift = abs(count * SHEAR_FACTOR) * image.width
+    new_height = image.height + int(round(yshift))
+    sheared_vertical = image.transform((image.width, new_height), Image.AFFINE, (1, 0, 0, SHEAR_FACTOR, 1, -yshift if SHEAR_FACTOR > 0 else 0), Image.BICUBIC)
     return transform_to_tensor(sheared_vertical)
 
 def add_shear_horizontal(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
-    for _ in range(count):
-        xshift = abs(SHEAR_FACTOR) * image.height
-        new_width = image.width + int(round(xshift))
-        sheared_horizontal = image.transform((new_width, image.height), Image.AFFINE, (1, SHEAR_FACTOR, -xshift if SHEAR_FACTOR > 0 else 0, 0, 1, 0), Image.BICUBIC)
+
+    xshift = abs(count * SHEAR_FACTOR) * image.height
+    new_width = image.width + int(round(xshift))
+    sheared_horizontal = image.transform((new_width, image.height), Image.AFFINE, (1, SHEAR_FACTOR, -xshift if SHEAR_FACTOR > 0 else 0, 0, 1, 0), Image.BICUBIC)
     return transform_to_tensor(sheared_horizontal)
 
 def add_blur(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
     for _ in range(count):
-        blurred_image = image.filter(ImageFilter.BLUR)
-    return transform_to_tensor(blurred_image)
+        image = image.filter(ImageFilter.BLUR)
+    return transform_to_tensor(image)
 
 attack_actions = {
     "random_noise": add_random_noise,
