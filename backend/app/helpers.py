@@ -57,14 +57,14 @@ def add_shift_right(image_tensor: Tensor, count: int) -> Tensor:
 def add_mirror_vertical(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
     for _ in range(count):
-        mirrored_horizontal = image.transpose(Image.FLIP_LEFT_RIGHT)
-    return transform_to_tensor(mirrored_horizontal)
+        image = image.transpose(Image.FLIP_LEFT_RIGHT)
+    return transform_to_tensor(image)
 
 def add_mirror_horizontal(image_tensor: Tensor, count: int) -> Tensor:
     image = transform_to_image_object(image_tensor)
     for _ in range(count):
-        mirrored_horizontal = image.transpose(Image.FLIP_TOP_BOTTOM)
-    return transform_to_tensor(mirrored_horizontal)
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+    return transform_to_tensor(image)
 
 attack_actions = {
     "random_noise": add_random_noise,
